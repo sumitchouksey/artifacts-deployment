@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.schouksey.deploy.artifacts</groupId>
+    <artifactId>maven-artifacts-deployment</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0</version>
+    <modules>
+        <module>deploy-maven-artifacts-at-github</module>
+    </modules>
+    <!-- PROPERTIES CONFIGURATION -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <github.global.server>github</github.global.server>
+    </properties>
+    <!--ADD GITHUB REPOSITORY DETAILS-->
+    <scm>
+        <url>https://github.com/sumitchouksey/raw.git</url>
+        <connection>scm:git:git@github.com/sumitchouksey/raw.git</connection>
+        <developerConnection>scm:git:git@github.com/sumitchouksey/raw.git</developerConnection>
+    </scm>
+    <!--ENABLE DISTRIBUTION MANAGEMENT FOR SNAPSHOT & RELEASE ARTIFACTS-->
+    <distributionManagement>
+        <snapshotRepository>
+            <id>github</id>
+            <name>archives</name>
+            <url>file://${project.build.directory}/local-repo</url>
+        </snapshotRepository>
+        <repository>
+            <id>github</id>
+            <name>archives</name>
+            <url>file://${project.build.directory}/local-repo</url>
+        </repository>
+    </distributionManagement>
+    <build>
+        <plugins>
+            <!--MAVEN JAVA DOCS PLUGIN-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--MAVEN DEPLOY PLUGIN-->
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.1</version>
+                <configuration>
+                    <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/local-repo</altDeploymentRepository>
+                </configuration>
+            </plugin>
+            <!--MAVEN GITHUB DEPLOYMENT PLUGIN-->
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.12</version>
+                <configuration>
+                    <!-- git commit message -->
+                    <message>Maven artifacts for ${project.version}</message>
+                    <!-- disable webpage processing -->
+                    <noJekyll>true</noJekyll>
+                    <!-- matches distribution management repository url above -->
+                    <outputDirectory>${project.build.directory}/local-repo</outputDirectory>
+                    <!-- remote branch name -->
+                    <branch>refs/heads/RELEASE-${project.version}</branch>
+                    <!-- If you remove this then the old artifact will be removed and new
+                     one will replace. But with the merge tag you can just release by changing
+                                                      the version -->
+                    <merge>true</merge>
+                    <includes>
+                        <include>**/*</include>
+                    </includes>
+                    <!-- github repo name -->
+                    <repositoryName>raw</repositoryName>
+                    <!-- github username -->
+                    <repositoryOwner>sumitchouksey</repositoryOwner>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
