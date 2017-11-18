@@ -9,6 +9,7 @@
     <version>1.0</version>
     <modules>
         <module>deploy-maven-artifacts-at-github</module>
+        <module>deploy-maven-artifacts-at-nexus</module>
     </modules>
     <!-- PROPERTIES CONFIGURATION -->
     <properties>
