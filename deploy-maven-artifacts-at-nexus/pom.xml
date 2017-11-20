@@ -13,8 +13,8 @@
     <!-- NEXUS PROPERTIES FOR ARTIFACTS DEPLOYMENT -->
     <properties>
         <nexus.id>nexus</nexus.id>
-        <base.url>http://10.90.21.241:8081/</base.url>
-        <nexus.url>http://10.90.21.241:8081/repository/archive-test/</nexus.url>
+        <base.url>http://localhost:8081/</base.url>
+        <nexus.url>http://localhost:8081/repository/archive-test/</nexus.url>
     </properties>
     <!-- FOR DEPLOYMENT : AS A CENTRAL NEXUS REPOSITORY -->
     <distributionManagement>
